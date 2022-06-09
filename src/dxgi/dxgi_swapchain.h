@@ -31,7 +31,8 @@ namespace dxvk {
             IDXGIVkSwapChain*           pPresenter,
             HWND                        hWnd,
       const DXGI_SWAP_CHAIN_DESC1*      pDesc,
-      const DXGI_SWAP_CHAIN_FULLSCREEN_DESC*  pFullscreenDesc);
+      const DXGI_SWAP_CHAIN_FULLSCREEN_DESC*  pFullscreenDesc,
+            IUnknown*                   pDevice);
     
     ~DxgiSwapChain();
     
@@ -202,6 +203,8 @@ namespace dxvk {
 
     uint32_t                        m_globalHDRStateSerial = 0;
     
+    bool                            m_is_d3d12;
+
     HRESULT EnterFullscreenMode(
             IDXGIOutput1            *pTarget);
     
