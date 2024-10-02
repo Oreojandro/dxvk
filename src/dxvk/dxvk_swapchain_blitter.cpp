@@ -58,6 +58,14 @@ namespace dxvk {
         srcView->image()->info().extent.height };
     }
 
+    Logger::err(str::format("DxvkSwapchainBlitter::beginPresent"
+      "\n   dst format:   ", dstView->info().format,
+      "\n   dst color sp: ", dstColorSpace,
+      "\n   src format:   ", srcView->info().format,
+      "\n   src samples:  ", srcView->image()->info().sampleCount,
+      "\n   src color sp: ", srcColorSpace,
+      "\n   gamma:        ", m_gammaBuffer != nullptr ? "yes" : "no"));
+
     if (m_gammaBuffer)
       uploadGammaImage(ctx);
 

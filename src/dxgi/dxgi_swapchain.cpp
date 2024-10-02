@@ -1011,7 +1011,7 @@ namespace dxvk {
             m_frameRateRefresh = double(mode.refreshRate.numerator)
                                / double(mode.refreshRate.denominator);
           }
-        }
+        } 
       }
     } else if (!m_descFs.Windowed) {
       // Reset tracking when in fullscreen mode
