@@ -2781,7 +2781,7 @@ namespace dxvk {
       feedback = ctx->ensureImageCompatibility(cImage, usageInfo);
     });
 
-    m_device->GetContext()->EmitCsChunkExternal(std::move(chunk), true);
+    m_device->GetContext()->InjectCsChunk(std::move(chunk), true);
 
     if (!feedback) {
       Logger::err(str::format("Failed to lock image:"
@@ -2805,7 +2805,7 @@ namespace dxvk {
       ctx->ensureBufferAddress(cBuffer);
     });
 
-    m_device->GetContext()->EmitCsChunkExternal(std::move(chunk), true);
+    m_device->GetContext()->InjectCsChunk(std::move(chunk), true);
   }
 
 
