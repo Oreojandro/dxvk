@@ -92,6 +92,8 @@ namespace dxvk {
       m_descriptorPool = m_descriptorManager->getDescriptorPool();
     }
 
+    m_descriptors.clear();
+
     m_cmd->finalize();
     return std::exchange(m_cmd, nullptr);
   }
