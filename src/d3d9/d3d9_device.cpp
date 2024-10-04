@@ -4504,7 +4504,7 @@ namespace dxvk {
     m_stagingBufferAllocated += size;
 
     D3D9BufferSlice result;
-    result.slice = m_stagingBuffer.alloc(256, size);
+    result.slice = m_stagingBuffer.alloc(size);
     result.mapPtr = result.slice.mapPtr(0);
     return result;
   }
