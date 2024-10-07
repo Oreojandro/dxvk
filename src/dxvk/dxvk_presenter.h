@@ -256,6 +256,9 @@ namespace dxvk {
 
     std::atomic<uint64_t>       m_lastFrameId = { 0ull };
 
+    uint32_t          m_swapchainFailedAcquires = 0u;
+    VkExtent2D        m_swapchainFailedImageExtent = { };
+
     VkResult recreateSwapChainInternal(
       const PresenterDesc&  desc);
 

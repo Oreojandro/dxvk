@@ -57,10 +57,16 @@ namespace dxvk {
         sync.acquire, VK_NULL_HANDLE, &m_imageIndex);
     }
 
-    if (m_acquireStatus != VK_SUCCESS && m_acquireStatus != VK_SUBOPTIMAL_KHR)
+    if (m_acquireStatus != VK_SUCCESS && m_acquireStatus != VK_SUBOPTIMAL_KHR) {
+      if (!(m_swapchainFailedAcquires++))
+        m_swapchainFailedImageExtent = m_info.imageExtent;
       return m_acquireStatus;
+    }
     
     index = m_imageIndex;
+
+    m_swapchainFailedAcquires = 0u;
+    m_swapchainFailedImageExtent = { 0u, 0u };
     return m_acquireStatus;
   }
 
@@ -593,6 +599,22 @@ namespace dxvk {
   VkExtent2D Presenter::pickImageExtent(
     const VkSurfaceCapabilitiesKHR& caps,
           VkExtent2D                desired) {
+    // On Wine 9.18 onwards, we sometimes recieve surface properties that are incompatible with
+    // what the driver expects. Work around this by trying to create a swap chain with the last
+    // known window size.
+    if (m_swapchainFailedAcquires >= 5u) {
+      m_swapchainFailedAcquires = 0u;
+
+      if (m_info.imageExtent == m_swapchainFailedImageExtent) {
+        Logger::err(str::format("Presenter: Failed to acquire from fresh swap chain multiple times."
+          "\n  Desired size:    ", desired.width, "x", desired.height,
+          "\n  Surface size:    ", int32_t(caps.currentExtent.width), "x", int32_t(caps.currentExtent.height),
+          "\n  Surface limits:  ", caps.minImageExtent.width, "x", caps.minImageExtent.height, " - ", caps.maxImageExtent.width, ",", caps.maxImageExtent.height,
+          "\n  Returning desired size as a last resort, this might be out of spec!"));
+        return desired;
+      }
+    }
+
     if (caps.currentExtent.width != std::numeric_limits<uint32_t>::max())
       return caps.currentExtent;
 
